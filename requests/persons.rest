@@ -1,0 +1,17 @@
+###
+GET http://localhost:3001/api/persons
+
+###
+GET http://localhost:3001/api/persons/2
+
+###
+DELETE http://localhost:3001/api/persons/2
+
+###
+POST http://localhost:3001/api/persons
+content-type: application/json
+
+{
+  "name": "Paul Ehrenfest",
+  "number": "137-2333454"
+}
