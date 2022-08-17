@@ -1,10 +1,10 @@
 {
-  "name": "fsopen-excs-part3",
+  "name": "fsopen-excs-pt3",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:ui": "rm -rf build && cd ../fsopen-excs/part2/phonebook && npm run build && cp -r build ../../../fsopen-excs-part3/",
+    "build:ui": "rm -rf build && cd ../fsopen-excs/part2/phonebook && npm run build && cp -r build ../../../fsopen-excs-pt3/",
     "deploy": "git add . && git commit -m deploy && git push heroku master",
     "deploy:full": "npm run build:ui && npm run deploy",
     "start": "node index.js",
@@ -23,7 +23,9 @@
   "homepage": "https://github.com/haykh/fsopen-excs-pt3#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "mongoose": "^6.5.2",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
