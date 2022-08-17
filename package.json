@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build:ui": "rm -rf build && cd ../fsopen-excs/part2/phonebook && npm run build && cp -r build ../../../fsopen-excs-part3/",
     "deploy": "git add . && git commit -m deploy && git push heroku master",
+    "deploy:full": "npm run build:ui && npm run deploy",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "log": "heroku logs -t"
   },
   "repository": {
     "type": "git",
