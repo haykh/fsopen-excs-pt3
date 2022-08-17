@@ -1,34 +1,76 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
 
 morgan.token('body', function (req, _res) {
   return JSON.stringify(req.body)
 })
 
+app.use(cors())
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
   {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456"
+    "name": "Arto Hellas",
+    "number": "040-123456",
+    "id": 1
   },
   {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523"
+    "name": "Ada Lovelace",
+    "number": "39-44-5323523",
+    "id": 2
   },
   {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345"
+    "name": "Dan Abramov",
+    "number": "12-43-234345",
+    "id": 3
   },
   {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122"
+    "name": "Mary Poppendieck",
+    "number": "211",
+    "id": 4
+  },
+  {
+    "name": "Isaac Newton",
+    "number": "12-34-5678902",
+    "id": 6
+  },
+  {
+    "name": "Niels Bohr",
+    "number": "12-34-5678904",
+    "id": 8
+  },
+  {
+    "name": "Lise Meitner",
+    "number": "12-34-5678905",
+    "id": 9
+  },
+  {
+    "name": "Enrico Fermi",
+    "number": "3-14-15-92-65-35",
+    "id": 10
+  },
+  {
+    "name": "Albert Hofmann",
+    "number": "12-34-5678907",
+    "id": 11
+  },
+  {
+    "name": "Erwin Schrödinger",
+    "number": "12-34-5678908",
+    "id": 12
+  },
+  {
+    "name": "Stephen Hawking",
+    "number": "12-34-5678911",
+    "id": 15
+  },
+  {
+    "name": "Ernest Rutherford",
+    "number": "343032-234322095",
+    "id": 17
   }
 ]
 
@@ -75,6 +117,13 @@ app.post('/api/persons', (req, res) => {
     number: req.body.number
   }
   persons = persons.concat(newPerson)
+  res.json(newPerson)
+})
+
+app.put('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const newPerson = req.body
+  persons = persons.map(p => p.id !== id ? p : newPerson)
   res.json(newPerson)
 })
 
