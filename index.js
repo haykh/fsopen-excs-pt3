@@ -15,13 +15,11 @@ app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(express.static('build'))
 
-app.get('/', (_req, res) => {
-  res.send('<h1>hi</h1>')
-})
-
 app.get('/info', (_req, res) => {
-  res.send(`<p>Phonebook has info for ${persons.length} people</p>
+  Person.find({}).then(persons => {
+    res.send(`<p>Phonebook has info for ${persons.length} people</p>
   <p>${new Date()}</p>`)
+  })
 })
 
 app.get('/api/persons', (_req, res) => {
@@ -30,49 +28,71 @@ app.get('/api/persons', (_req, res) => {
   })
 })
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(p => p.id === id)
-  if (person) {
-    res.json(person)
-  } else {
-    res.status(404).end()
-  }
+app.get('/api/persons/:id', (req, res, next) => {
+  Person.findById(req.params.id)
+    .then(person => {
+      if (person) {
+        res.json(person)
+      } else {
+        res.status(404).end()
+      }
+    })
+    .catch(err => next(err))
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  persons = persons.filter(p => p.id !== id)
-  res.status(204).end()
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndRemove(req.params.id)
+    .then(person => {
+      if (person) {
+        res.status(204).end()
+      } else {
+        res.status(404).end()
+      }
+    })
+    .catch(err => next(err))
 })
 
 app.post('/api/persons', (req, res) => {
-  const newID = Math.floor(Math.random() * 1000000);
   if (!(req.body.name && req.body.number)) {
     return res.status(400).json({
       error: 'name or number missing'
     })
   }
-  if (persons.find(p => p.name === req.body.name)) {
-    return res.status(400).json({
-      error: 'name exists in phonebook'
-    })
-  }
-  const newPerson = {
-    id: newID,
+  const newPerson = new Person({
     name: req.body.name,
     number: req.body.number
-  }
-  persons = persons.concat(newPerson)
-  res.json(newPerson)
+  })
+  newPerson.save().then(savedPerson => {
+    res.json(savedPerson)
+  })
 })
 
 app.put('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const newPerson = req.body
-  persons = persons.map(p => p.id !== id ? p : newPerson)
-  res.json(newPerson)
+  const person = {
+    name: req.body.name,
+    number: req.body.number
+  }
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updPerson => {
+      res.json(updPerson)
+    })
+    .catch(err => next(err))
 })
+
+const unknownEndpoint = (_req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (err, _req, res, next) => {
+  console.error(err.message)
+  if (err.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' })
+  }
+  next(err)
+}
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
