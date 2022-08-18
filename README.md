@@ -4,11 +4,11 @@
 
 ```shell
 root:
-https://gentle-island-96118.herokuapp.com
+https://morninbru-phonebook-fsopen.herokuapp.com
 
 info:
-https://gentle-island-96118.herokuapp.com/info
+https://morninbru-phonebook-fsopen.herokuapp.com/info
 
 api/persons:
-https://gentle-island-96118.herokuapp.com/api/persons
+https://morninbru-phonebook-fsopen.herokuapp.com/api/persons
 ```
