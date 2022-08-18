@@ -10,8 +10,30 @@ mongoose.connect(url)
   })
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String
+  name: {
+    type: String,
+    required: [true, "contact name is required"],
+    minlength: [3, "contact name must be at least 3 characters long"],
+  },
+  number: {
+    type: String,
+    validate: {
+      validator: (v) => {
+        const nnumbs = v.replaceAll('-', '').length
+        let valid = /^\d+$/.test(v.replaceAll('-', ''))
+        valid = valid && (nnumbs >= 8)
+        const vnew = v.split('-')
+        if (vnew.length > 1) {
+          valid = valid && ((vnew[0].length === 3) || (vnew[0].length === 2))
+        } else if (vnew.length < 1) {
+          valid = false
+        }
+        return valid
+      },
+      message: props => `${props.value} is not a valid phone number`
+    },
+    required: [true, "contact number is required"],
+  }
 })
 
 personSchema.set('toJSON', {
