@@ -5,7 +5,7 @@ const cors = require('cors')
 
 const Person = require('./models/person')
 
-morgan.token('body', function (req, _res) {
+morgan.token('body', req => {
   return JSON.stringify(req.body)
 })
 
@@ -53,11 +53,6 @@ app.delete('/api/persons/:id', (req, res, next) => {
 })
 
 app.post('/api/persons', (req, res, next) => {
-  // if (!(req.body.name && req.body.number)) {
-  //   return res.status(400).json({
-  //     error: 'name or number missing'
-  //   })
-  // }
   const newPerson = new Person({
     name: req.body.name,
     number: req.body.number

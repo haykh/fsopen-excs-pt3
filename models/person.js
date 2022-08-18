@@ -12,8 +12,8 @@ mongoose.connect(url)
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "contact name is required"],
-    minlength: [3, "contact name must be at least 3 characters long"],
+    required: [true, 'contact name is required'],
+    minlength: [3, 'contact name must be at least 3 characters long'],
   },
   number: {
     type: String,
@@ -32,7 +32,7 @@ const personSchema = new mongoose.Schema({
       },
       message: props => `${props.value} is not a valid phone number`
     },
-    required: [true, "contact number is required"],
+    required: [true, 'contact number is required'],
   }
 })
 
